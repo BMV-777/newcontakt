@@ -1,9 +1,11 @@
 import './App.css';
 import { Component } from 'react';
+import { nanoid } from 'nanoid';
 
 import Container from 'components/Contener/Container';
 import Forms from 'components/User/Forms';
 import UserList from 'components/User/UserList';
+// import { node } from 'prop-types';
 // import './components/Contener/Contaner.modul.css';
 
 class App extends Component {
@@ -16,8 +18,23 @@ class App extends Component {
     ],
   };
 
+  addTodo = e => {
+    console.log(e);
+
+    const contacts = {
+      id: nanoid(),
+      name: e,
+      number: '',
+    };
+
+    this.setState(prevState => ({
+      contacts: [contacts, ...prevState.contacts],
+    }));
+  };
+
   formSubmitHandler = data => {
     console.log(data);
+    this.addTodo();
   };
 
   // name = nanoid();
