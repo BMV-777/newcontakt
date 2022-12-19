@@ -2,53 +2,76 @@ import './App.css';
 import { Component } from 'react';
 import { nanoid } from 'nanoid';
 
-import Container from 'components/Contener/Container';
 import Forms from 'components/User/Forms';
 import UserList from 'components/User/UserList';
-// import { node } from 'prop-types';
-// import './components/Contener/Contaner.modul.css';
+import data from './data.json';
+import Filter from 'components/Filter/Filter';
 
 class App extends Component {
   state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
+    contacts: data,
+    filter: '',
   };
 
-  addTodo = e => {
-    console.log(e);
-
-    const contacts = {
+  addContact = ({ name, number }) => {
+    const contact = {
       id: nanoid(),
-      name: e,
-      number: '',
+      name,
+      number,
     };
 
+    //   this.setState(prevState => ({
+    //     contacts: [contacts, ...prevState.contacts],
+    //   }));
+    // };
+
+    this.setState(({ contacts }) => {
+      if (contacts.some(contact => contact.name === name)) {
+        return alert(`${name} is already in contacts.`);
+      }
+      return {
+        contacts: [contact, ...contacts],
+      };
+    });
+  };
+
+  // formSubmitHandler = data => {
+  //   console.log(data);
+  //   this.addTodo();
+  // };
+
+  onDeleteContact = id => {
     this.setState(prevState => ({
-      contacts: [contacts, ...prevState.contacts],
+      contacts: prevState.contacts.filter(contact => contact.id !== id),
     }));
   };
 
-  formSubmitHandler = data => {
-    console.log(data);
-    this.addTodo();
+  //===Метод меняeющий соcтояния поля Filter===//
+  onChangeFilter = e => {
+    this.setState({ filter: e.currentTarget.value });
   };
 
-  // name = nanoid();
+  //===Метод который ищет пользователя по имени===//
+  onSerchByName = () => {
+    const { filter, contacts } = this.state;
+    const normaLize = filter.toLowerCase();
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normaLize)
+    );
+  };
 
   render() {
-    const { contacts } = this.state;
+    const { filter } = this.state;
+    const visibleContacts = this.onSerchByName();
     return (
       <div>
-        <h1>Phonebook</h1>
-        <Container>
-          <Forms onSubmit={this.formSubmitHandler} />
-        </Container>
-        <h2>Contacts</h2>
-        <UserList contacts={contacts} />
+        <Forms onSubmit={this.addContact} />
+        <Filter
+          title="Contacts"
+          value={filter}
+          onChange={this.onChangeFilter}
+        />
+        <UserList item={visibleContacts} deleteContact={this.onDeleteContact} />
       </div>
     );
   }

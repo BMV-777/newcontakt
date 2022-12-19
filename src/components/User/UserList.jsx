@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ListItem from 'components/ListItem/ListItem';
-import styles from './UserList.module.css';
+import styles from './Form.module.css';
 
 const UserList = ({ item, deleteContact }) => {
   return (
