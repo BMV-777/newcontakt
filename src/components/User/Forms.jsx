@@ -7,6 +7,7 @@ class Forms extends Component {
     name: '',
     number: '',
   };
+
   //===Метод меняющий состояние в полях===//
 
   onHandleInputData = e => {

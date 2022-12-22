@@ -20,11 +20,6 @@ class App extends Component {
       number,
     };
 
-    //   this.setState(prevState => ({
-    //     contacts: [contacts, ...prevState.contacts],
-    //   }));
-    // };
-
     this.setState(({ contacts }) => {
       if (contacts.some(contact => contact.name === name)) {
         return alert(`${name} is already in contacts.`);
@@ -35,10 +30,27 @@ class App extends Component {
     });
   };
 
-  // formSubmitHandler = data => {
-  //   console.log(data);
-  //   this.addTodo();
-  // };
+  //===Монтирование компонента==//
+  componentDidMount() {
+    const contacts = localStorage.getItem('contacts');
+    const parceContacts = JSON.parse(contacts);
+
+    if (parceContacts) {
+      this.setState({ contacts: parceContacts });
+    }
+    return parceContacts;
+  }
+
+  //===Обновление компонента componentDidUpdate, сохраняем новый контакт в локальное хранилище===//
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
+
+  componentWillUnmount() {
+    console.log('Размонтирование компонента');
+  }
 
   onDeleteContact = id => {
     this.setState(prevState => ({
